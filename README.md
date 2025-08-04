@@ -2,6 +2,12 @@
 
 This is a web-based Feedback Form System developed using Java Servlets, JDBC, and MySQL. It allows users to submit structured feedback through a multi-step HTML form with star ratings, text inputs, and file upload support. The feedback is stored in a MySQL database for analysis and reporting.
 
+* Live Demo
+
+Access the deployed feedback form here:
+
+* https://feedbackformsystem.netlify.app/
+
 * Features
  
 Multi-step feedback form with validation
