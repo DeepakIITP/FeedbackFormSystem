@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Feedback Collection System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --gray-light: #f3f4f6;
+            --gray-dark: #4b5563;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--gray-light);
+        }
+
+        .card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .rating-star {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .rating-star:hover {
+            transform: scale(1.2);
+        }
+
+        .submit-btn {
+            transition: all 0.3s ease;
+            background-color: var(--primary);
+        }
+
+        .submit-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header Section -->
+        <div class="text-center mb-12 animate-fadeIn">
+            <div class="flex justify-center mb-4">
+                <div class="relative h-24 w-24 rounded-full bg-indigo-100 flex items-center justify-center">
+                    <svg class="h-16 w-16 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M19 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h4l3 3 3-3h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 16h-4.83l-.59.59L12 20.17l-1.59-1.59-.58-.58H5V4h14v14zm-8-3h2v2h-2zm0-8h2v6h-2z" />
+                    </svg>
+                </div>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Digital Feedback System</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">A comprehensive digital solution for collecting,
+                analyzing, and managing feedback with real-time insights and reporting.</p>
+        </div>
+
+        <!-- Features Section -->
+        <div class="grid md:grid-cols-3 gap-6 mb-10 animate-fadeIn" style="animation-delay: 0.1s;">
+            <div class="bg-white p-6 rounded-lg shadow-sm card">
+                <div class="text-indigo-600 mb-3">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-2">Real-time Collection</h3>
+                <p class="text-gray-600 text-sm">Gather feedback instantly from multiple channels with validation.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm card">
+                <div class="text-indigo-600 mb-3">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H5a2 2 0 01-2-2V7a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-2">Analytics Dashboard</h3>
+                <p class="text-gray-600 text-sm">Visual reports and trend analysis of feedback data.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm card">
+                <div class="text-indigo-600 mb-3">
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-2">Secure Storage</h3>
+                <p class="text-gray-600 text-sm">All data encrypted and stored securely in cloud database.</p>
+            </div>
+        </div>
+
+        <!-- Feedback Form Container -->
+        <div class="bg-white rounded-xl shadow-sm card overflow-hidden animate-fadeIn" style="animation-delay: 0.2s;">
+            <!-- Form Progress Indicator -->
+            <div class="bg-gray-100 px-6 py-4 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-700">Step <span id="current-step">1</span> of 3</span>
+                    <div id="progress-bar" class="h-2 bg-gray-300 rounded-full w-1/3"></div>
+                </div>
+            </div>
+
+            <!-- Form Sections -->
+            <form id="feedbackForm" class="divide-y divide-gray-200">
+                <!-- Section 1: Basic Information -->
+                <div class="form-section p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-6">Your Information</h2>
+
+                    <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                        <div class="sm:col-span-3">
+                            <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                            <input type="text" name="name" id="name" placeholder="John Doe"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+                            <span class="text-red-500 text-xs hidden" id="name-error">Please enter your name</span>
+                        </div>
+
+                        <div class="sm:col-span-3">
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                            <input type="email" name="email" id="email" placeholder="john@example.com"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+                            <span class="text-red-500 text-xs hidden" id="email-error">Please enter a valid email</span>
+                        </div>
+
+                        <div class="sm:col-span-3">
+                            <label for="department"
+                                class="block text-sm font-medium text-gray-700">Department/Section</label>
+                            <select id="department" name="department"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+                                <option value="">Select department</option>
+                                <option value="HR">Human Resources</option>
+                                <option value="IT">Information Technology</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Operations">Operations</option>
+                                <option value="Support">Customer Support</option>
+                            </select>
+                            <span class="text-red-500 text-xs hidden" id="department-error">Please select a
+                                department</span>
+                        </div>
+
+                        <div class="sm:col-span-3">
+                            <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
+                            <input type="date" name="date" id="date"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border">
+                            <span class="text-red-500 text-xs hidden" id="date-error">Please select a date</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Feedback Ratings -->
+                <div class="form-section hidden p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-6">Feedback Ratings</h2>
+
+                    <div class="space-y-8">
+                        <!-- Question 1 -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-4">How would you rate your overall
+                                experience?</label>
+                            <div class="flex justify-center space-x-4" id="rating-overall">
+                                <div data-value="1" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                                <div data-value="2" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                                <div data-value="3" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                                <div data-value="4" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                                <div data-value="5" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                            </div>
+                            <input type="hidden" name="overall-rating" id="overall-rating" value="">
+                            <span class="text-red-500 text-xs hidden" id="rating-overall-error">Please rate your
+                                experience</span>
+                        </div>
+
+                        <!-- Question 2 -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-4">How satisfied are you with our
+                                response time?</label>
+                            <div class="flex justify-center space-x-4" id="rating-response">
+                                <div data-value="1" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                                <div data-value="2" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                                <div data-value="3" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                                <div data-value="4" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                                <div data-value="5" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                            </div>
+                            <input type="hidden" name="response-rating" id="response-rating" value="">
+                            <span class="text-red-500 text-xs hidden" id="rating-response-error">Please rate our
+                                response time</span>
+                        </div>
+
+                        <!-- Question 3 -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-4">How likely are you to recommend
+                                our services?</label>
+                            <div class="flex justify-center space-x-4" id="rating-recommend">
+                                <div data-value="1" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                                <div data-value="2" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                                <div data-value="3" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                                <div data-value="4" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                                <div data-value="5" class="rating-star text-gray-400 hover:text-yellow-400 text-3xl">★
+                                </div>
+                            </div>
+                            <input type="hidden" name="recommend-rating" id="recommend-rating" value="">
+                            <span class="text-red-500 text-xs hidden" id="rating-recommend-error">Please rate your
+                                likelihood to recommend</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Detailed Feedback -->
+                <div class="form-section hidden p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-6">Detailed Feedback</h2>
+
+                    <div class="space-y-6">
+                        <div>
+                            <label for="feedback" class="block text-sm font-medium text-gray-700">What did you like
+                                most?</label>
+                            <textarea id="feedback-positive" name="feedback-positive" rows="3"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                                placeholder="Positive aspects of your experience"></textarea>
+                        </div>
+
+                        <div>
+                            <label for="feedback-negative" class="block text-sm font-medium text-gray-700">What could be
+                                improved?</label>
+                            <textarea id="feedback-negative" name="feedback-negative" rows="3"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                                placeholder="Areas for improvement"></textarea>
+                        </div>
+
+                        <div>
+                            <label for="feedback-suggestions" class="block text-sm font-medium text-gray-700">Any
+                                additional suggestions?</label>
+                            <textarea id="feedback-suggestions" name="feedback-suggestions" rows="3"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+                                placeholder="Your valuable suggestions"></textarea>
+                        </div>
+
+                        <div class="flex items-center mb-4">
+                            <input id="contact-permission" name="contact-permission" type="checkbox"
+                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <label for="contact-permission" class="ml-2 block text-sm text-gray-700">I would like to be
+                                contacted regarding my feedback</label>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Upload supporting file
+                                (optional)</label>
+                            <div class="mt-1 flex items-center">
+                                <input type="file" id="feedback-file" name="feedback-file"
+                                    accept=".pdf,.doc,.docx,.jpg,.png" class="hidden">
+                                <label for="feedback-file"
+                                    class="cursor-pointer rounded-md border border-gray-300 py-2 px-3 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    <svg class="h-5 w-5 inline mr-1 text-gray-400" fill="currentColor"
+                                        viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    Choose File
+                                </label>
+                                <span id="file-name" class="ml-3 text-sm text-gray-600">No file chosen</span>
+                            </div>
+                            <p class="mt-1 text-xs text-gray-500">PDF, DOC, JPG, PNG up to 5MB</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="bg-gray-50 px-6 py-4 flex justify-between">
+                    <button type="button" id="prev-btn"
+                        class="hidden rounded-md border border-gray-300 py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Previous</button>
+                    <button type="button" id="next-btn"
+                        class="next-btn rounded-md border border-transparent py-2 px-6 text-sm font-medium text-white shadow-sm submit-btn focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Next</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Submission Confirmation (Hidden Initially) -->
+        <div id="confirmation" class="hidden bg-white rounded-xl shadow-sm card p-8 text-center mt-8 animate-fadeIn">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h3 class="mt-3 text-lg font-medium text-gray-900">Feedback submitted successfully!</h3>
+            <p class="mt-2 text-sm text-gray-500">Thank you for taking the time to share your thoughts with us.</p>
+            <div class="mt-6">
+                <button id="new-feedback-btn"
+                    class="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Submit
+                    another feedback</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form Navigation Logic
+        document.addEventListener('DOMContentLoaded', function () {
+            const formSections = document.querySelectorAll('.form-section');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const currentStepEl = document.getElementById('current-step');
+            const progressBar = document.getElementById('progress-bar');
+            const confirmationEl = document.getElementById('confirmation');
+            const feedbackForm = document.getElementById('feedbackForm');
+            const newFeedbackBtn = document.getElementById('new-feedback-btn');
+
+            let currentSection = 0;
+
+            // Initialize the form
+            showSection(currentSection);
+
+            // Next button click handler
+            nextBtn.addEventListener('click', function () {
+                if (!validateCurrentSection()) return;
+
+                if (currentSection === formSections.length - 1) {
+                    // Submit form on last section
+                    submitForm();
+                } else {
+                    currentSection++;
+                    showSection(currentSection);
+                }
+            });
+
+            // Previous button click handler
+            prevBtn.addEventListener('click', function () {
+                currentSection--;
+                showSection(currentSection);
+            });
+
+            // New feedback button click handler
+            newFeedbackBtn.addEventListener('click', function () {
+                resetForm();
+            });
+
+            // Star rating functionality
+            setupRating('rating-overall', 'overall-rating');
+            setupRating('rating-response', 'response-rating');
+            setupRating('rating-recommend', 'recommend-rating');
+
+            // File upload handler
+            document.getElementById('feedback-file').addEventListener('change', function (e) {
+                const fileName = e.target.files[0]?.name || 'No file chosen';
+                document.getElementById('file-name').textContent = fileName;
+            });
+
+            function setupRating(elementId, inputId) {
+                const stars = document.getElementById(elementId).querySelectorAll('.rating-star');
+                const ratingInput = document.getElementById(inputId);
+
+                stars.forEach(star => {
+                    star.addEventListener('click', function () {
+                        const value = parseInt(this.getAttribute('data-value'));
+                        ratingInput.value = value;
+
+                        // Update star display
+                        stars.forEach((s, index) => {
+                            if (index < value) {
+                                s.classList.add('text-yellow-400');
+                                s.classList.remove('text-gray-400');
+                            } else {
+                                s.classList.add('text-gray-400');
+                                s.classList.remove('text-yellow-400');
+                            }
+                        });
+
+                        // Clear any error
+                        document.getElementById(`${elementId}-error`).classList.add('hidden');
+                    });
+                });
+            }
+
+            function showSection(sectionIndex) {
+                formSections.forEach((section, index) => {
+                    if (index === sectionIndex) {
+                        section.classList.remove('hidden');
+                    } else {
+                        section.classList.add('hidden');
+                    }
+                });
+
+                // Update navigation buttons
+                if (sectionIndex === 0) {
+                    prevBtn.classList.add('hidden');
+                } else {
+                    prevBtn.classList.remove('hidden');
+                }
+
+                if (sectionIndex === formSections.length - 1) {
+                    nextBtn.textContent = 'Submit';
+                    nextBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+                    nextBtn.classList.remove('submit-btn');
+                } else {
+                    nextBtn.textContent = 'Next';
+                    nextBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    nextBtn.classList.add('submit-btn');
+                }
+
+                // Update progress
+                currentStepEl.textContent = sectionIndex + 1;
+                progressBar.style.width = `${((sectionIndex + 1) / formSections.length) * 100}%`;
+            }
+
+            function validateCurrentSection() {
+                let isValid = true;
+
+                // Section 1 validation
+                if (currentSection === 0) {
+                    const name = document.getElementById('name').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const department = document.getElementById('department').value;
+                    const date = document.getElementById('date').value;
+
+                    if (!name) {
+                        document.getElementById('name-error').classList.remove('hidden');
+                        isValid = false;
+                    } else {
+                        document.getElementById('name-error').classList.add('hidden');
+                    }
+
+                    if (!email || !validateEmail(email)) {
+                        document.getElementById('email-error').classList.remove('hidden');
+                        isValid = false;
+                    } else {
+                        document.getElementById('email-error').classList.add('hidden');
+                    }
+
+                    if (!department) {
+                        document.getElementById('department-error').classList.remove('hidden');
+                        isValid = false;
+                    } else {
+                        document.getElementById('department-error').classList.add('hidden');
+                    }
+
+                    if (!date) {
+                        document.getElementById('date-error').classList.remove('hidden');
+                        isValid = false;
+                    } else {
+                        document.getElementById('date-error').classList.add('hidden');
+                    }
+                }
+
+                // Section 2 validation
+                else if (currentSection === 1) {
+                    const overallRating = document.getElementById('overall-rating').value;
+                    const responseRating = document.getElementById('response-rating').value;
+                    const recommendRating = document.getElementById('recommend-rating').value;
+
+                    if (!overallRating) {
+                        document.getElementById('rating-overall-error').classList.remove('hidden');
+                        isValid = false;
+                    } else {
+                        document.getElementById('rating-overall-error').classList.add('hidden');
+                    }
+
+                    if (!responseRating) {
+                        document.getElementById('rating-response-error').classList.remove('hidden');
+                        isValid = false;
+                    } else {
+                        document.getElementById('rating-response-error').classList.add('hidden');
+                    }
+
+                    if (!recommendRating) {
+                        document.getElementById('rating-recommend-error').classList.remove('hidden');
+                        isValid = false;
+                    } else {
+                        document.getElementById('rating-recommend-error').classList.add('hidden');
+                    }
+                }
+
+                return isValid;
+            }
+
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            function submitForm() {
+                // In a real application, this would send data to the server
+                // For this demo, we'll simulate successful submission
+
+                // Hide form and show confirmation
+                document.querySelector('.card').classList.add('hidden');
+                confirmationEl.classList.remove('hidden');
+
+                // Here you would typically do:
+                // const formData = new FormData(feedbackForm);
+                // fetch('/submit-feedback', {
+                //     method: 'POST',
+                //     body: formData
+                // })
+                // .then(response => response.json())
+                // .then(data => {
+                //     console.log('Success:', data);
+                // })
+                // .catch(error => {
+                //     console.error('Error:', error);
+                // });
+
+                console.log('Form submission simulated with data:', {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    department: document.getElementById('department').value,
+                    date: document.getElementById('date').value,
+                    overallRating: document.getElementById('overall-rating').value,
+                    responseRating: document.getElementById('response-rating').value,
+                    recommendRating: document.getElementById('recommend-rating').value,
+                    feedbackPositive: document.getElementById('feedback-positive').value,
+                    feedbackNegative: document.getElementById('feedback-negative').value,
+                    feedbackSuggestions: document.getElementById('feedback-suggestions').value,
+                    contactPermission: document.getElementById('contact-permission').checked
+                });
+            }
+
+            function resetForm() {
+                // Reset form state
+                feedbackForm.reset();
+
+                // Reset star ratings
+                document.querySelectorAll('.rating-star').forEach(star => {
+                    star.classList.add('text-gray-400');
+                    star.classList.remove('text-yellow-400');
+                });
+
+                document.querySelectorAll('[id$="-error"]').forEach(errorEl => {
+                    errorEl.classList.add('hidden');
+                });
+
+                document.getElementById('overall-rating').value = '';
+                document.getElementById('response-rating').value = '';
+                document.getElementById('recommend-rating').value = '';
+
+                // Show first section and hide confirmation
+                document.querySelector('.card').classList.remove('hidden');
+                confirmationEl.classList.add('hidden');
+
+                currentSection = 0;
+                showSection(currentSection);
+            }
+        });
+    </script>
+</body>
+
+</html>
